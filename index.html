@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Більше число</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<audio id="bgMusic" src="music.mp3" loop></audio>
+
+<div class="scene">
+    <div class="vignette"></div>
+
+    <div class="game-field">
+        
+        <div class="player-panel user-panel">
+            <div class="panel-header">
+                <span class="player-name" id="userNameLabel">Гравець</span>
+                <div class="lives-container" id="userLives">
+                    <div class="life-bullet active"></div>
+                    <div class="life-bullet active"></div>
+                    <div class="life-bullet active"></div>
+                </div>
+            </div>
+            <div class="circle-container">
+                <div class="number-circle" id="userNumber">?</div>
+            </div>
+        </div>
+
+        <div class="center-panel">
+            <button class="btn-generate" id="generateBtn">ЗГЕНЕРУВАТИ</button>
+        </div>
+
+        <div class="player-panel comp-panel">
+            <div class="panel-header">
+                <span class="player-name active" id="compNameLabel">КОМП'ЮТЕР</span>
+                <div class="lives-container" id="compLives">
+                    <div class="life-bullet active"></div>
+                    <div class="life-bullet active"></div>
+                    <div class="life-bullet active"></div>
+                </div>
+            </div>
+            <div class="circle-container">
+                <div class="number-circle" id="compNumber">?</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="message-box" id="message"></div>
+
+    <div class="hidden-monster" id="compFigure">
+        <div class="eyes">
+            <div class="eye" id="eyeL"></div>
+            <div class="eye" id="eyeR"></div>
+        </div>
+        <div class="mouth" id="mouth"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

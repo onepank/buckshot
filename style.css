@@ -1,0 +1,312 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    color: #ddd;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+.scene {
+    width: 100vw;
+    height: 100vh;
+    background: #000 url('bg.jpg') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 2vw 3vh 2vw;
+}
+
+.vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 50%, transparent 20%, rgba(0,0,0,0.95) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.game-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 2;
+    padding-bottom: 2vh;
+}
+
+.player-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3vh;
+    width: 25vw;
+    max-width: 350px;
+    min-width: 200px;
+}
+
+.panel-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 1.5vh 0;
+    position: relative;
+    background: linear-gradient(180deg, #0e3a54 0%, #061f2e 100%);
+    border: 3px solid #2b5f7e;
+    border-radius: 3px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 5px 15px rgba(0,0,0,0.8);
+}
+
+.panel-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 5% 10%, rgba(139, 69, 19, 0.5) 0%, transparent 50%),
+                radial-gradient(circle at 95% 90%, rgba(100, 40, 10, 0.5) 0%, transparent 50%);
+    pointer-events: none;
+    border-radius: 2px;
+    mix-blend-mode: overlay;
+}
+
+.panel-header::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border: 1px dashed rgba(200, 100, 50, 0.3);
+    pointer-events: none;
+    border-radius: 2px;
+}
+
+.player-name {
+    font-size: clamp(14px, 1.5vw, 22px);
+    font-weight: bold;
+    text-transform: capitalize;
+    letter-spacing: 2px;
+    color: #a0b8c8;
+    text-shadow: 1px 1px 2px #000;
+    margin-bottom: 0.5vh;
+    z-index: 1;
+}
+
+.player-name.active {
+    color: #f0c850; 
+    text-shadow: 0 0 10px rgba(240, 200, 80, 0.5), 1px 1px 2px #000;
+}
+
+.lives-container {
+    display: flex;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #000;
+    border: 2px solid #222;
+    border-radius: 2px;
+    box-shadow: inset 0 0 10px #000;
+    z-index: 1;
+}
+
+.life-bullet {
+    width: 10px;
+    height: 20px;
+    background: #111;
+    border: 1px solid #000;
+    border-radius: 2px;
+}
+
+.life-bullet.active {
+    background: #55ff55;
+    box-shadow: 0 0 10px #55ff55, inset 0 0 3px #fff;
+}
+
+.life-bullet.lost {
+    background: #220000;
+}
+
+.circle-container {
+    position: relative;
+    width: clamp(100px, 13vw, 160px);
+    height: clamp(100px, 13vw, 160px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    filter: drop-shadow(0 0 10px rgba(139, 69, 19, 0.4));
+}
+
+.number-circle {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(45px, 5.5vw, 80px);
+    font-weight: bold;
+    color: #c9ff22;
+    text-shadow: 0 0 15px #c9ff22, 0 0 30px #aadd00;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15) 0%, transparent 30%),
+                radial-gradient(circle at 70% 70%, rgba(139, 69, 19, 0.3) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #1a1c20 0%, #0a0a0a 80%);
+    border: 2px solid #000;
+    box-shadow: inset 0 0 30px rgba(0,0,0,1),
+                inset 0 0 10px rgba(255,255,255,0.1),
+                0 0 0 4px #2a2e33,
+                0 0 0 6px #4a525a,
+                0 0 0 8px #1a1e21,
+                0 0 0 10px rgba(139, 69, 19, 0.6),
+                0 15px 25px rgba(0,0,0,0.9);
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.number-circle::after {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255,255,255,0.1);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.number-circle.pop {
+    animation: hitMetal 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes hitMetal {
+    0% { transform: scale(0.85); opacity: 0; }
+    50% { transform: scale(1.05); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+.center-panel {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 100%;
+    padding-bottom: 5vh;
+}
+
+.btn-generate {
+    background: #0a0f0a;
+    color: #d4ff00;
+    border: 2px solid #000;
+    border-radius: 3px;
+    padding: clamp(15px, 2vh, 25px) clamp(35px, 5vw, 90px);
+    font-size: clamp(18px, 2vw, 28px);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 rgba(255,255,255,0.1), 0 0 10px #d4ff00;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.9),
+                inset 0 0 10px rgba(100,255,0,0.1),
+                0 0 0 4px #2a3a2a,
+                0 0 0 6px #4a6a4a,
+                0 0 0 8px #0a140a,
+                0 0 0 10px rgba(139, 69, 19, 0.5),
+                0 0 0 12px rgba(100, 40, 10, 0.3),
+                0 10px 0 #050505,
+                0 15px 25px rgba(0,0,0,0.9);
+    transition: all 0.1s ease;
+    position: relative;
+}
+
+.btn-generate::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 10% 20%, rgba(139, 69, 19, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(100, 40, 10, 0.6) 0%, transparent 40%),
+                repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0,0,0,0.3) 10px, rgba(0,0,0,0.3) 12px);
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    border-radius: 2px;
+}
+
+.btn-generate:hover:not(:disabled) {
+    background: #141f15;
+    color: #e5ff33;
+    box-shadow: inset 0 0 30px rgba(0,0,0,1),
+                inset 0 0 15px rgba(100,255,0,0.3),
+                0 0 0 4px #2a3a2a,
+                0 0 0 6px #6a8a6a,
+                0 0 0 8px #0a140a,
+                0 0 0 10px rgba(139, 69, 19, 0.7),
+                0 0 0 12px rgba(100, 40, 10, 0.5),
+                0 10px 0 #050505,
+                0 15px 35px rgba(0,0,0,0.9);
+}
+
+.btn-generate:active:not(:disabled) {
+    transform: translateY(10px);
+    box-shadow: inset 0 0 30px rgba(0,0,0,1),
+                inset 0 0 20px rgba(100,255,0,0.4),
+                0 0 0 4px #2a3a2a,
+                0 0 0 6px #4a6a4a,
+                0 0 0 8px #0a140a,
+                0 0 0 10px rgba(139, 69, 19, 0.5),
+                0 0 0 12px rgba(100, 40, 10, 0.3),
+                0 0 0 #050505;
+}
+
+.btn-generate:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    color: #444;
+    text-shadow: none;
+    transform: translateY(8px);
+    border-color: #222;
+    box-shadow: inset 0 0 20px #000, 0 2px 0 #000;
+}
+
+.message-box {
+    position: absolute;
+    bottom: 1vh;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(12px, 1.2vw, 20px);
+    color: #aaa;
+    text-align: center;
+    transition: color 0.3s, text-shadow 0.3s;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-shadow: 1px 1px 2px #000;
+    z-index: 10;
+    width: 90%;
+}
+
+.message-box.win { color: #6bff6b; text-shadow: 0 0 15px rgba(107, 255, 107, 0.6), 1px 1px 2px #000; }
+.message-box.lose { color: #ff4444; text-shadow: 0 0 15px rgba(255, 68, 68, 0.6), 1px 1px 2px #000; }
+
+.hidden-monster { display: none; }
+
+@media (max-width: 768px) and (orientation: portrait) {
+    .game-field {
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        padding-bottom: 5vh;
+    }
+    .player-panel {
+        width: 85vw;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+    .panel-header { width: 55%; padding: 1vh 2vw; }
+    .circle-container { width: 22vw; height: 22vw; max-width: 120px; max-height: 120px; }
+    .center-panel { padding-bottom: 3vh; width: 100%; margin-top: 2vh; }
+    .btn-generate { width: 85%; padding: 15px 20px; font-size: 18px; }
+    .message-box { bottom: 1vh; }
+}
